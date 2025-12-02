@@ -1,21 +1,21 @@
-# Bin Packing Problem Solver - Trabalho 2 (PO)
+# Empacotamento (Bin Packing) – Trabalho 2 (PO)
 
-Este projeto implementa uma solução para o **Problema do Empacotamento (Bin Packing Problem)** utilizando Programação por Restrições (CP) com a biblioteca **Google OR-Tools**. O objetivo é minimizar o número de caixas necessárias para alocar um conjunto de itens com pesos variados, respeitando uma capacidade fixa por caixa.
+Este é meu projeto da disciplina de **Pesquisa Operacional (UFF)**. Nele eu resolvo o **Problema do Empacotamento (Bin Packing)** usando **OR-Tools (CP-SAT)**. A ideia é bem direta: temos itens com pesos e caixas com capacidade fixa, e queremos usar o menor número de caixas possível.
 
 ## 📋 Visão Geral
 
 O projeto foi estruturado para realizar experimentos computacionais automatizados, gerando instâncias sintéticas de diferentes tamanhos, resolvendo-as e coletando métricas de desempenho para análise posterior.
 
-### Funcionalidades Principais
-- **Geração de Instâncias:** Cria cenários com 20, 50 e 100 itens (pesos aleatórios entre 1 e 10).
-- **Solver Otimizado:** Utiliza o solver CP-SAT do OR-Tools com restrições de quebra de simetria para melhor desempenho.
-- **Coleta de Métricas:** Registra tempo de execução, número de caixas, *best bound*, gap de otimalidade e status da solução.
-- **Visualização:** Gera gráficos automáticos relacionando o tamanho da instância com o tempo de execução e a qualidade da solução.
+### O que o código faz
+- Gera instâncias com 20, 50 e 100 itens (pesos aleatórios de 1 a 10).
+- Monta o modelo no OR-Tools com variáveis `x` (item na caixa) e `y` (caixa usada), exatamente como vemos na teoria.
+- Roda o solver com limite de tempo de 30s.
+- Salva tudo em `results.csv` para usar no relatório.
+- Gera um gráfico simples (`analise_bin_packing.png`) com tempo médio e caixas médias por tamanho.
 
 ## 🛠️ Pré-requisitos
 
-Devido a requisitos de compatibilidade da biblioteca `ortools`, este projeto requer:
-- **Python 3.11** (Versões mais recentes como 3.12+ podem não ter suporte oficial ainda para o OR-Tools).
+- Ter **Python 3.11** (o OR-Tools costuma funcionar melhor nessa versão).
 
 ## 🚀 Instalação
 
@@ -26,67 +26,67 @@ Devido a requisitos de compatibilidade da biblioteca `ortools`, este projeto req
    ```
 
 2. **Instale as dependências:**
-   Utilize o comando abaixo para garantir a instalação no ambiente Python 3.11:
+   Pode usar o launcher do Windows (3.11) ou o `python` do seu ambiente:
    ```bash
    py -3.11 -m pip install ortools pandas matplotlib
+   python -m pip install ortools pandas matplotlib
    ```
 
 ## ▶️ Como Executar
 
 ### 1. Rodar os Experimentos
-O script principal gera as instâncias, executa o solver e salva os resultados em `results.csv`.
+Ele gera as instâncias, roda o solver e salva `results.csv`.
 ```bash
 py -3.11 main.py
+python main.py
 ```
-*Tempo estimado: 1 a 2 minutos.*
+Tempo estimado: 1 a 2 minutos (por causa das instâncias de 100 itens).
 
-### 2. Gerar Gráficos de Análise
-Após a execução do passo anterior, gere os gráficos de desempenho (`analise_bin_packing.png`):
+### 2. Gerar Gráficos
+Depois de criar o CSV, dá para gerar o gráfico (`analise_bin_packing.png`):
 ```bash
 py -3.11 plots.py
+python plots.py
 ```
 
 ## 📂 Estrutura do Projeto
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `main.py` | **Orquestrador:** Define os parâmetros do experimento (tamanhos, capacidade, repetições), gera os dados, chama o solver e exporta o CSV. |
-| `solver.py` | **Núcleo:** Contém a função `solve_bin_packing`. Implementa o modelo matemático (variáveis, restrições e função objetivo) usando OR-Tools. |
-| `plots.py` | **Visualização:** Lê o arquivo `results.csv` e gera gráficos comparativos de Tempo e Solução. |
+| `main.py` | Gera instâncias, chama o solver, e salva o CSV. |
+| `solver.py` | Onde está o modelo do OR-Tools (variáveis x e y, restrições e objetivo). Função é `resolver_bin_packing`. |
+| `plots.py` | Lê `results.csv` e cria um gráfico simples para o relatório. |
 | `results.csv` | **Saída:** Arquivo gerado automaticamente contendo os dados brutos de todas as execuções. |
 
-## 🧠 Detalhes da Modelagem (`solver.py`)
+## 🧠 Como é o modelo (bem direto)
 
-O problema foi modelado como um problema de satisfação de restrições (CP):
-- **Variáveis:** 
-  - $x_{i,j}$: Binária, indica se o item $i$ está na caixa $j$.
-  - $y_j$: Binária, indica se a caixa $j$ foi utilizada.
+- **Variáveis:**
+   - `x[i,j]` = 1 se o item i está na caixa j.
+   - `y[j]` = 1 se a caixa j foi usada.
 - **Restrições:**
-  1. Cada item deve estar em exatamente uma caixa.
-  2. A soma dos pesos em uma caixa não pode exceder sua capacidade (se a caixa for usada).
-  3. **Quebra de Simetria:** Força o uso das caixas em ordem ($y_j \leq y_{j-1}$) para reduzir o espaço de busca e acelerar a convergência.
-- **Objetivo:** Minimizar $\sum y_j$.
+   1. Cada item vai em exatamente uma caixa.
+   2. A soma dos pesos dentro da caixa j não passa da capacidade (só conta se `y[j]=1`).
+   3. Quebra de simetria: usamos caixas na ordem (`y[j] <= y[j-1]`).
+- **Objetivo:** Minimizar a soma de `y[j]` (menos caixas usadas).
 
-## 📊 Interpretando os Resultados
+## 📊 Sobre os resultados
 
-No arquivo `results.csv`, você encontrará:
-- **Status:** `OPTIMAL` (solução ótima comprovada) ou `FEASIBLE` (solução viável encontrada, mas pode não ser a ótima se o tempo acabou).
-- **Gap (%):** Diferença percentual entre a solução encontrada e o melhor limite inferior teórico. Um Gap de 0.0% indica otimalidade comprovada.
-- **Tempo (s):** Tempo de parede (*wall time*) gasto pelo solver.
+No `results.csv` tem:
+- **Status:** `OPTIMAL` (provou ótimo) ou `FEASIBLE` (achou solução viável, mas talvez não provou ótimo porque acabou o tempo).
+- **Gap (%):** Se for `0.0`, ótimo provado. Se for `> 0%` na instância de 100 itens, é porque bateu o **time limit (30s)**.
+- **Tempo (s):** tempo que o solver gastou.
 
 ---
-*Desenvolvido para a disciplina de Pesquisa Operacional (UFF).*
+*Projeto da disciplina de Pesquisa Operacional (UFF).* 
 
-## 📝 Próximos Passos (Sua "To-Do List")
+## 📝 Próximos Passos (To-Do)
 
-1. **Instalação:** Certifique-se de instalar as dependências:
+1. **Instalar dependências**:
    ```bash
-   pip install ortools pandas matplotlib
+   py -3.11 -m pip install ortools pandas matplotlib
+   python -m pip install ortools pandas matplotlib
    ```
-
-2. **Execução:** Rode `python main.py`. Isso vai demorar cerca de 1 a 2 minutos no total (devido às instâncias de 100 itens).
-
-3. **Relatório:** Pegue o arquivo `results.csv`. Abra no Excel, formate como tabela e copie para a seção **5. Resultados Obtidos** do seu relatório.
-
-4. **Análise:** Ao escrever a **Discussão**, observe o **Gap** na instância de 100 itens. Se o Gap for > 0%, significa que o solver parou pelo *Time Limit* (30s) e a solução pode não ser a ótima global, embora seja viável. Isso é um ponto excelente para discutir nas "Limitações".
+2. **Rodar `main.py`** (gera `results.csv`).
+3. **Rodar `plots.py`** (gera `analise_bin_packing.png`).
+4. **Relatório**: abrir `results.csv` no Excel, formatar como tabela e colar na seção de Resultados. Na Discussão, comentar que se o **Gap** da instância de 100 itens for **> 0%**, é por causa do **time limit (30s)** — solução é viável, mas talvez não ótima provada (boa limitação para mencionar).
 

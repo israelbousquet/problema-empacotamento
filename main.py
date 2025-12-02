@@ -64,6 +64,7 @@ def main():
         writer.writeheader()
         writer.writerows(results_data)
     print(f"\nSucesso! Resultados salvos em '{ARQUIVO_SAIDA}'.")
+    print("Obs: limite de tempo do solver = 30s. Se o Gap > 0% nas instâncias maiores, significa que a solução é viável mas pode não ser ótima provada.")
 
 if __name__ == "__main__":
     main()
