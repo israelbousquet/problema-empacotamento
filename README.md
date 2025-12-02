@@ -90,3 +90,6 @@ No `results.csv` tem:
 3. **Rodar `plots.py`** (gera gráfico `analise_bin_packing.png`).
 4. **Relatório**: abrir `results.csv` no Excel, formatar como tabela e colar na seção de Resultados. Na Discussão, comentar que se o **Gap** da instância de 100 itens for **> 0%**, é por causa do **time limit (30s)** — solução é viável, mas talvez não ótima provada (boa limitação para mencionar).
 
+## 📝 Execução do gráfico `plots.py`
+
+![alt text](image.png)
