@@ -1,6 +1,6 @@
 # Empacotamento (Bin Packing) – Trabalho 2 (PO)
 
-Este é meu projeto da disciplina de **Pesquisa Operacional (UFF)**. Nele eu resolvo o **Problema do Empacotamento (Bin Packing)** usando **OR-Tools (CP-SAT)**. A ideia é bem direta: temos itens com pesos e caixas com capacidade fixa, e queremos usar o menor número de caixas possível.
+Projeto da disciplina de **Pesquisa Operacional (UFF)**. Resolvemos o **Problema do Empacotamento (Bin Packing)** usando **OR-Tools (CP-SAT)**. Maior detalhamento na continuação do readme.
 
 ## 📋 Visão Geral
 
@@ -15,18 +15,18 @@ O projeto foi estruturado para realizar experimentos computacionais automatizado
 
 ## 🛠️ Pré-requisitos
 
-- Ter **Python 3.11** (o OR-Tools costuma funcionar melhor nessa versão).
+- **Python 3.11** (o OR-Tools é compatível com essa versão).
 
 ## 🚀 Instalação
 
 1. **Verifique sua versão do Python:**
-   Certifique-se de ter o Python 3.11 instalado. No Windows, você pode verificar e usar o "Python Launcher" (`py`):
+   Obrigatório Python 3.11 instalado. Comando para identificar versões instaladas:
    ```bash
    py --list
    ```
 
 2. **Instale as dependências:**
-   Pode usar o launcher do Windows (3.11) ou o `python` do seu ambiente:
+   Indicado utilizar o `python` para download das dependências:
    ```bash
    py -3.11 -m pip install ortools pandas matplotlib
    python -m pip install ortools pandas matplotlib
@@ -35,15 +35,15 @@ O projeto foi estruturado para realizar experimentos computacionais automatizado
 ## ▶️ Como Executar
 
 ### 1. Rodar os Experimentos
-Ele gera as instâncias, roda o solver e salva `results.csv`.
+Gera as instâncias, roda o solver e salva em um excel: `results.csv`. Comandos para executar main.py:
 ```bash
 py -3.11 main.py
 python main.py
 ```
-Tempo estimado: 1 a 2 minutos (por causa das instâncias de 100 itens).
+Execução pode chegar a demorar entre 1 a 2 minutos dependendo das configurações no contexto da execução, a demora ocorre pela quantidade de instâncias.
 
 ### 2. Gerar Gráficos
-Depois de criar o CSV, dá para gerar o gráfico (`analise_bin_packing.png`):
+Após criar o CSV, é possível gerar um gráfico: `analise_bin_packing.png`. Comandos para executar plots.py:
 ```bash
 py -3.11 plots.py
 python plots.py
@@ -55,7 +55,7 @@ python plots.py
 |---------|-----------|
 | `main.py` | Gera instâncias, chama o solver, e salva o CSV. |
 | `solver.py` | Onde está o modelo do OR-Tools (variáveis x e y, restrições e objetivo). Função é `resolver_bin_packing`. |
-| `plots.py` | Lê `results.csv` e cria um gráfico simples para o relatório. |
+| `plots.py` | Lê excel `results.csv` e cria um gráfico simples para o relatório. |
 | `results.csv` | **Saída:** Arquivo gerado automaticamente contendo os dados brutos de todas as execuções. |
 
 ## 🧠 Como é o modelo (bem direto)
@@ -79,14 +79,14 @@ No `results.csv` tem:
 ---
 *Projeto da disciplina de Pesquisa Operacional (UFF).* 
 
-## 📝 Próximos Passos (To-Do)
+## 📝 Passo a Passo Guiado
 
 1. **Instalar dependências**:
    ```bash
    py -3.11 -m pip install ortools pandas matplotlib
    python -m pip install ortools pandas matplotlib
    ```
-2. **Rodar `main.py`** (gera `results.csv`).
-3. **Rodar `plots.py`** (gera `analise_bin_packing.png`).
+2. **Rodar `main.py`** (gera arquivo `results.csv`).
+3. **Rodar `plots.py`** (gera gráfico `analise_bin_packing.png`).
 4. **Relatório**: abrir `results.csv` no Excel, formatar como tabela e colar na seção de Resultados. Na Discussão, comentar que se o **Gap** da instância de 100 itens for **> 0%**, é por causa do **time limit (30s)** — solução é viável, mas talvez não ótima provada (boa limitação para mencionar).
 
