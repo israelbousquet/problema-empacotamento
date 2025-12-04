@@ -7,7 +7,7 @@ import csv
 from solver import resolver_bin_packing
 
 # --- Configurações do Experimento [cite: 20, 96, 97, 101, 102] ---
-TAMANHOS = [20, 50, 100]  # quantos itens por instância
+TAMANHOS = [20, 50, 100, 200, 500]  # quantos itens por instância
 CAPACIDADE = 30           # capacidade fixa da caixa
 REPETICOES = 3            # quantas vezes rodar por tamanho
 LIMITE_TEMPO = 30.0       # limite de tempo (segundos)
